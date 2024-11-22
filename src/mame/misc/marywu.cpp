@@ -216,8 +216,8 @@ ROM_START( marywu )
 ROM_END
 
 ROM_START( marysun )
-	ROM_REGION( 0x4000, "maincpu", 0 )
-	ROM_LOAD( "mary_sunrise.rom", 0x0000, 0x4000, CRC(746463A4) SHA1(065478223a809c75fe0302d1c85f129d94f503b4) )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "mary_sunrise.rom", 0x0000, 0x10000, CRC(746463A4) SHA1(065478223a809c75fe0302d1c85f129d94f503b4) )
 ROM_END
 } // anonymous namespace
 
