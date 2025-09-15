@@ -46,6 +46,7 @@ public:
 	{ }
 
 	void marywu(machine_config &config);
+    void mary1s(machine_config &config);
 
 protected:
 	virtual void machine_start() override ATTR_COLD;
@@ -177,7 +178,7 @@ void marywu_state::io_map(address_map &map)
 	map(0x9000, 0x9001).mirror(0x0ffc).rw("ay1", FUNC(ay8910_device::data_r), FUNC(ay8910_device::address_data_w));
 	map(0x9002, 0x9003).mirror(0x0ffc).rw("ay2", FUNC(ay8910_device::data_r), FUNC(ay8910_device::address_data_w));
 	map(0xb000, 0xb001).mirror(0x0ffe).rw("i8279", FUNC(i8279_device::read), FUNC(i8279_device::write));
-	map(0xf000, 0xf000).noprw(); /* TODO: Investigate this. There's something going on at this address range. */
+	map(0xf000, 0xf000).noprw();  /* TODO: Investigate this. There's something going on at this address range. Does not happen in mary1s. */
 }
 
 void marywu_state::machine_start()
@@ -224,6 +225,17 @@ void marywu_state::marywu(machine_config &config)
 	ay2.port_b_write_callback().set(FUNC(marywu_state::ay2_port_b_w));
 }
 
+void marywu_state::mary1s(machine_config &config) 
+{
+	marywu(config);
+	i80c52_device &maincpu(I80C52(config.replace(), "maincpu", XTAL(10'738'635))); // actual cpu is W78E52B-24. xtal jfc 10.7386 mhz
+	maincpu.port_in_cb<1>().set_ioport("P1");
+	maincpu.port_out_cb<1>().set(FUNC(marywu_state::out_1_w));
+	maincpu.set_addrmap(AS_PROGRAM, &marywu_state::program_map);
+    maincpu.set_addrmap(AS_IO, &marywu_state::io_map);
+}
+
+
 ROM_START( marywu )
 	ROM_REGION( 0x8000, "maincpu", 0 )
 	ROM_LOAD( "marywu_sunkiss_chen.rom", 0x0000, 0x8000, CRC(11f67c7d) SHA1(9c1fd1a5cc6e2b0d675f0217aa8ff21c30609a0c) )
@@ -239,5 +251,5 @@ ROM_END
 
 //    YEAR  NAME    PARENT   MACHINE   INPUT   STATE         INIT        ROT   COMPANY      FULLNAME                                                   FLAGS
 GAME( ????, marywu,  0,      marywu,   marywu, marywu_state, empty_init, ROT0, "<unknown>", "unknown Labeled 'WU- MARY-1A' Music by: SunKiss Chen",    MACHINE_NOT_WORKING )
-GAME( ????, mary1s,  0,      marywu,   marywu, marywu_state, empty_init, ROT0, "<unknown>", "unknown Labeled 'MARY-1/SUNRISE' Music by: SunKiss Chen", MACHINE_NOT_WORKING )
+GAME( ????, mary1s,  0,      mary1s,   marywu, marywu_state, empty_init, ROT0, "<unknown>", "unknown Labeled 'MARY-1/SUNRISE' Music by: SunKiss Chen", MACHINE_NOT_WORKING )
 	
