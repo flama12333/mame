@@ -39,6 +39,7 @@ On first power-up the machine must be zeroed:
 After this sequence it will run normally.
 
 panda2 takes roughly 33 emulated seconds to boot.
+tzwang adpcm rom bank,  0-3FFFF 256kb 8 bank.
 */
 
 
